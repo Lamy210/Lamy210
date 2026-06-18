@@ -17,6 +17,19 @@ AIを活用した開発体験、スケーラブルなバックエンド、モバ
 
 ---
 
+## Activity
+
+日々の積み上げは、public activity として見える範囲だけを静かに可視化します。
+private repositories の詳細は公開せず、GitHub Actions が `main` へのマージ後と定期実行で3D contribution graphを更新します。
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="./profile-3d-contrib/profile-night-rainbow.svg">
+  <source media="(prefers-color-scheme: light)" srcset="./profile-3d-contrib/profile-green-animate.svg">
+  <img alt="Lamy's 3D GitHub contribution graph" src="./profile-3d-contrib/profile-green-animate.svg">
+</picture>
+
+---
+
 ## Private Repository Insights
 
 private repositories の具体的な情報は公開しません。<br>
