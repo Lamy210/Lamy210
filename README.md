@@ -14,3 +14,7 @@ Here are some ideas to get you started:
 - 😄 Pronouns: ...
 - ⚡ Fun fact: ...
 -->
+
+<!-- PRIVATE_TECH_START -->
+Private repository technology summary is not available yet.
+<!-- PRIVATE_TECH_END -->
