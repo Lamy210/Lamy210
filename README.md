@@ -14,3 +14,10 @@ Here are some ideas to get you started:
 - 😄 Pronouns: ...
 - ⚡ Fun fact: ...
 -->
+<!-- PRIVATE_TECH_START -->
+
+| Language | Share |
+|---|---:|
+| No data | 0.0% |
+
+<!-- PRIVATE_TECH_END -->
