@@ -41,11 +41,6 @@ private repositories の詳細は公開せず、GitHub Actions が `main` への
 
 ## Private Repository Insights
 
-READMEに表示する技術シグナルは、内容に対応した安全なアイコン付きで表現します。
-private technology summary は GitHub が検出した言語統計、各repositoryのprimary language signal、安全なtopic signalをもとに更新され、コード量だけでなく小さなGo / Rust repositoriesやframework傾向も反映されるようにします。
-private repositories の具体的な情報は公開しません。<br>
-repo名、commit、PR、issue、branch、file path、ファイル名はREADMEにもログにも出さず、公開する場合も集計済みの安全なコード量・割合・技術シグナルのみに限定します。
-
 <!-- PRIVATE_TECH_START -->
 ### Private technology summary
 
