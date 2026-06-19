@@ -46,7 +46,7 @@ private repositories の詳細は公開せず、GitHub Actions が `main` への
 
 ```mermaid
 pie showData
-    title Private Language Distribution
+    title Private Language Distribution by Code Volume
     "TypeScript" : 43.9
     "Python" : 7.6
     "PHP" : 14.8
@@ -58,7 +58,7 @@ pie showData
     "Others" : 7.5
 ```
 
-| Technology | Share | Category |
+| Technology | Code share | Category |
 | --- | ---: | --- |
 | <img alt="TypeScript icon" src="https://cdn.simpleicons.org/typescript/3178C6" width="18" height="18"> TypeScript | 43.9% | Language |
 | <img alt="Python icon" src="https://cdn.simpleicons.org/python/3776AB" width="18" height="18"> Python | 7.6% | Language |

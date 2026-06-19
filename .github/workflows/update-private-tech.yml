@@ -41,7 +41,7 @@ jobs:
           PRIVATE_TECH_SUMMARY_MODE: redacted
         run: node --experimental-strip-types scripts/update-private-tech-summary.ts
 
-      - name: Update private language summary
+      - name: Update private technology summary
         if: vars.PRIVATE_TECH_SUMMARY_MODE != 'redacted'
         env:
           PRIVATE_TECH_SUMMARY_MODE: languages
