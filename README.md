@@ -3,6 +3,13 @@
 > Snow-minded Product Builder<br>
 > AI / Infrastructure / Backend / Mobile
 
+<p>
+  <img alt="AI" src="https://img.shields.io/badge/AI-111827?style=for-the-badge&logo=openai&logoColor=white">
+  <img alt="Infrastructure" src="https://img.shields.io/badge/Infrastructure-2563EB?style=for-the-badge&logo=cloudflare&logoColor=white">
+  <img alt="Backend" src="https://img.shields.io/badge/Backend-0F766E?style=for-the-badge&logo=go&logoColor=white">
+  <img alt="Mobile" src="https://img.shields.io/badge/Mobile-7C3AED?style=for-the-badge&logo=flutter&logoColor=white">
+</p>
+
 静かに積み上げるように、プロダクトと基盤をつくっています。<br>
 AIを活用した開発体験、スケーラブルなバックエンド、モバイル体験、インフラ設計に関心があります。
 
@@ -10,10 +17,12 @@ AIを活用した開発体験、スケーラブルなバックエンド、モバ
 
 ## About
 
-- AIを活用したプロダクト開発
-- Backend / Infrastructure を中心とした設計・実装
-- Mobile / Frontend を含むユーザー体験づくり
-- 小さく検証し、継続的に改善するProduct Builder志向
+| Focus | Signal |
+| --- | --- |
+| <img alt="AI icon" src="https://cdn.simpleicons.org/openai/111827" width="18" height="18"> AI | AIを活用したプロダクト開発 |
+| <img alt="Backend icon" src="https://cdn.simpleicons.org/go/00ADD8" width="18" height="18"> Backend / <img alt="Infrastructure icon" src="https://cdn.simpleicons.org/cloudflare/F38020" width="18" height="18"> Infrastructure | Backend / Infrastructure を中心とした設計・実装 |
+| <img alt="Mobile icon" src="https://cdn.simpleicons.org/flutter/02569B" width="18" height="18"> Mobile / <img alt="Frontend icon" src="https://cdn.simpleicons.org/react/61DAFB" width="18" height="18"> Frontend | Mobile / Frontend を含むユーザー体験づくり |
+| <img alt="Product icon" src="https://cdn.simpleicons.org/github/181717" width="18" height="18"> Product Builder | 小さく検証し、継続的に改善するProduct Builder志向 |
 
 ---
 
@@ -32,6 +41,8 @@ private repositories の詳細は公開せず、GitHub Actions が `main` への
 
 ## Private Repository Insights
 
+READMEに表示する技術シグナルは、内容に対応した安全なアイコン付きで表現します。
+private language summary は GitHub が検出した言語統計をもとに更新され、Rust / Go は検出されていれば上位外でも表示対象に残します。
 private repositories の具体的な情報は公開しません。<br>
 repo名、commit、PR、issue、branch、file path、ファイル名はREADMEにもログにも出さず、公開する場合も集計済みの安全な情報のみに限定します。
 

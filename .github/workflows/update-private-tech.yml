@@ -44,6 +44,7 @@ jobs:
         if: vars.PRIVATE_TECH_SUMMARY_MODE != 'redacted'
         env:
           PRIVATE_TECH_SUMMARY_MODE: languages
+          PRIVATE_TECH_PINNED_LANGUAGES: Rust,Go
           PRIVATE_REPO_STATS_TOKEN: ${{ secrets.PRIVATE_REPO_STATS_TOKEN }}
         run: node --experimental-strip-types scripts/update-private-tech-summary.ts
 
