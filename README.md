@@ -49,19 +49,20 @@ repo名、commit、PR、issue、branch、file path、ファイル名はREADMEに
 <!-- PRIVATE_TECH_START -->
 ### Private technology summary
 
-Total detected private code volume: **refresh pending**
+Total detected private code volume: **132.4 MB**
 
 | Language | Code volume | Usage share | Primary signal |
 | --- | ---: | ---: | ---: |
-| Private language statistics | refresh pending | refresh pending | refresh pending |
+| <img alt="TypeScript icon" src="https://cdn.simpleicons.org/typescript/3178C6" width="18" height="18"> TypeScript | 58.1 MB | 43.9% | 22 repos |
+| <img alt="Python icon" src="https://cdn.simpleicons.org/python/3776AB" width="18" height="18"> Python | 10.1 MB | 7.6% | 10 repos |
+| <img alt="PHP icon" src="https://cdn.simpleicons.org/php/777BB4" width="18" height="18"> PHP | 19.6 MB | 14.8% | 2 repos |
+| <img alt="JavaScript icon" src="https://cdn.simpleicons.org/javascript/F7DF1E" width="18" height="18"> JavaScript | 14.0 MB | 10.6% | 6 repos |
+| <img alt="Go icon" src="https://cdn.simpleicons.org/go/00ADD8" width="18" height="18"> Go | 10.3 MB | 7.8% | 7 repos |
+| <img alt="Shell icon" src="https://cdn.simpleicons.org/gnubash/4EAA25" width="18" height="18"> Shell | 1.83 MB | 1.4% | 4 repos |
+| <img alt="HTML icon" src="https://cdn.simpleicons.org/html5/E34F26" width="18" height="18"> HTML | 5.10 MB | 3.9% | 0 repos |
+| <img alt="Rust icon" src="https://cdn.simpleicons.org/rust/000000" width="18" height="18"> Rust | 3.33 MB | 2.5% | 1 repos |
 
-### Private framework signals
-
-| Framework | Detected usage |
-| --- | ---: |
-| Safe repository topic signals | refresh pending |
-
-_The next scheduled private technology update replaces this placeholder with aggregate language byte volume, usage share, primary language counts, and safe framework topic signals. Repository names, repository lists, commits, branches, file paths, and API responses are intentionally omitted. Rust and Go are kept visible when GitHub reports them, even if they fall outside the top activity rows._
+_Aggregated from private repository language byte statistics, each repository's primary language signal, and safe repository topics for framework signals. Repository names, repository lists, commits, branches, file paths, and API responses are intentionally omitted. Rust and Go are kept visible when GitHub reports them, even if they fall outside the top activity rows._
 <!-- PRIVATE_TECH_END -->
 
 ---
