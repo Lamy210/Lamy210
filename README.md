@@ -36,16 +36,20 @@ private repositories の具体的な情報は公開しません。<br>
 repo名、commit、PR、issue、branch、file path、ファイル名はREADMEにもログにも出さず、公開する場合も集計済みの安全な情報のみに限定します。
 
 <!-- PRIVATE_TECH_START -->
+### Private language summary
 
-Private repository insights are disabled by default.
+| Language | Activity |
+| --- | --- |
+| TypeScript | High |
+| PHP | Low |
+| JavaScript | Low |
+| Go | Low |
+| Python | Low |
+| HTML | Low |
+| CSS | Low |
+| Rust | Low |
 
-| Metric | Status |
-|---|---|
-| Private repository names | Not displayed |
-| Commit / PR / issue / branch data | Not displayed |
-| File paths / file names | Not displayed |
-| Aggregated language statistics | Disabled by default |
-
+_Aggregated from private repository language statistics. Repository names, repository lists, exact percentages, and API responses are intentionally omitted._
 <!-- PRIVATE_TECH_END -->
 
 ---
