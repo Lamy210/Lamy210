@@ -48,26 +48,30 @@ private repositories の詳細は公開せず、GitHub Actions が `main` への
 pie showData
     title Private Language Distribution by Code Volume
     "TypeScript" : 43.9
-    "Python" : 7.6
     "PHP" : 14.8
-    "JavaScript" : 10.6
+    "JavaScript" : 10.5
     "Go" : 7.8
-    "Shell" : 1.4
+    "Python" : 7.6
     "HTML" : 3.9
+    "CSS" : 2.5
     "Rust" : 2.5
-    "Others" : 7.5
+    "Others" : 6.5
 ```
 
 | Technology | Code share | Category |
 | --- | ---: | --- |
 | <img alt="TypeScript icon" src="https://cdn.simpleicons.org/typescript/3178C6" width="18" height="18"> TypeScript | 43.9% | Language |
-| <img alt="Python icon" src="https://cdn.simpleicons.org/python/3776AB" width="18" height="18"> Python | 7.6% | Language |
 | <img alt="PHP icon" src="https://cdn.simpleicons.org/php/777BB4" width="18" height="18"> PHP | 14.8% | Language |
-| <img alt="JavaScript icon" src="https://cdn.simpleicons.org/javascript/F7DF1E" width="18" height="18"> JavaScript | 10.6% | Language |
+| <img alt="JavaScript icon" src="https://cdn.simpleicons.org/javascript/F7DF1E" width="18" height="18"> JavaScript | 10.5% | Language |
 | <img alt="Go icon" src="https://cdn.simpleicons.org/go/00ADD8" width="18" height="18"> Go | 7.8% | Language |
-| <img alt="Shell icon" src="https://cdn.simpleicons.org/gnubash/4EAA25" width="18" height="18"> Shell | 1.4% | Language |
+| <img alt="Python icon" src="https://cdn.simpleicons.org/python/3776AB" width="18" height="18"> Python | 7.6% | Language |
 | <img alt="HTML icon" src="https://cdn.simpleicons.org/html5/E34F26" width="18" height="18"> HTML | 3.9% | Language |
+| <img alt="CSS icon" src="https://cdn.simpleicons.org/css/663399" width="18" height="18"> CSS | 2.5% | Language |
 | <img alt="Rust icon" src="https://cdn.simpleicons.org/rust/000000" width="18" height="18"> Rust | 2.5% | Language |
+
+### Private framework & tool signals
+
+<code><img alt="Hono icon" src="https://cdn.simpleicons.org/hono/E36002" width="18" height="18"> Hono</code> <code><img alt="React icon" src="https://cdn.simpleicons.org/react/61DAFB" width="18" height="18"> React</code> <code><img alt="Express icon" src="https://cdn.simpleicons.org/express/000000" width="18" height="18"> Express</code> <code><img alt="Gin icon" src="https://cdn.simpleicons.org/go/00ADD8" width="18" height="18"> Gin</code> <code><img alt="Vite icon" src="https://cdn.simpleicons.org/vite/646CFF" width="18" height="18"> Vite</code> <code><img alt="Astro icon" src="https://cdn.simpleicons.org/astro/BC52EE" width="18" height="18"> Astro</code> <code><img alt="Axum icon" src="https://cdn.simpleicons.org/rust/000000" width="18" height="18"> Axum</code> <code><img alt="Expo icon" src="https://cdn.simpleicons.org/expo/000020" width="18" height="18"> Expo</code> <code><img alt="Next.js icon" src="https://cdn.simpleicons.org/nextdotjs/000000" width="18" height="18"> Next.js</code> <code><img alt="React Native icon" src="https://cdn.simpleicons.org/react/61DAFB" width="18" height="18"> React Native</code>
 
 _Private repositories are summarized only as coarse technology signals. Language shares use GitHub-reported code volume, and framework/tool signals come from repository topics plus common manifest files. Repository names, products, commits, branches, paths, exact code volume, repository counts, and business context are intentionally not published. Rust and Go are kept visible when GitHub reports them, even if they fall outside the top activity rows._
 <!-- PRIVATE_TECH_END -->
