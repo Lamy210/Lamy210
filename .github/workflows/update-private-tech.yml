@@ -28,6 +28,7 @@ jobs:
         with:
           ref: ${{ github.event.repository.default_branch }}
           fetch-depth: 0
+          persist-credentials: false
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -50,6 +51,8 @@ jobs:
 
       - name: Commit README update
         shell: bash
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set +x
 
@@ -61,4 +64,9 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add README.md
           git commit -m "chore: update private technology summary [skip ci]"
-          git push origin HEAD:${{ github.event.repository.default_branch }}
+
+          branch="${{ github.event.repository.default_branch }}"
+          auth_remote="https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}.git"
+          git fetch "$auth_remote" "$branch"
+          git rebase FETCH_HEAD
+          git push "$auth_remote" "HEAD:$branch"
