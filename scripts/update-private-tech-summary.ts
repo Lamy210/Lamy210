@@ -8,6 +8,10 @@ const START_MARKER = '<!-- PRIVATE_TECH_START -->';
 const END_MARKER = '<!-- PRIVATE_TECH_END -->';
 const TOKEN = process.env.PRIVATE_REPO_STATS_TOKEN;
 const SUMMARY_MODE = process.env.PRIVATE_TECH_SUMMARY_MODE;
+const PINNED_LANGUAGES = (process.env.PRIVATE_TECH_PINNED_LANGUAGES || 'Rust,Go')
+  .split(',')
+  .map((language) => language.trim())
+  .filter(Boolean);
 const API_VERSION = '2022-11-28';
 
 type GitHubRepository = {
@@ -18,6 +22,34 @@ type GitHubRepository = {
 
 type LanguageTotals = Map<string, number>;
 type LanguageResponse = Record<string, number>;
+
+const LANGUAGE_ICONS: Record<string, string> = {
+  TypeScript: 'https://cdn.simpleicons.org/typescript/3178C6',
+  JavaScript: 'https://cdn.simpleicons.org/javascript/F7DF1E',
+  Python: 'https://cdn.simpleicons.org/python/3776AB',
+  Go: 'https://cdn.simpleicons.org/go/00ADD8',
+  Rust: 'https://cdn.simpleicons.org/rust/000000',
+  Swift: 'https://cdn.simpleicons.org/swift/F05138',
+  Kotlin: 'https://cdn.simpleicons.org/kotlin/7F52FF',
+  Dart: 'https://cdn.simpleicons.org/dart/0175C2',
+  Java: 'https://cdn.simpleicons.org/openjdk/000000',
+  Ruby: 'https://cdn.simpleicons.org/ruby/CC342D',
+  PHP: 'https://cdn.simpleicons.org/php/777BB4',
+  Shell: 'https://cdn.simpleicons.org/gnubash/4EAA25',
+  Dockerfile: 'https://cdn.simpleicons.org/docker/2496ED',
+  HTML: 'https://cdn.simpleicons.org/html5/E34F26',
+  CSS: 'https://cdn.simpleicons.org/css/663399',
+  Vue: 'https://cdn.simpleicons.org/vuedotjs/4FC08D',
+  Svelte: 'https://cdn.simpleicons.org/svelte/FF3E00',
+};
+
+function renderLanguageLabel(language: string): string {
+  const iconUrl = LANGUAGE_ICONS[language];
+  if (!iconUrl) return language;
+
+  return `<img alt=\"${language} icon\" src=\"${iconUrl}\" width=\"18\" height=\"18\"> ${language}`;
+}
+
 const headers = TOKEN
   ? {
       Accept: 'application/vnd.github+json',
@@ -89,6 +121,21 @@ function renderRedactedSummary(): string {
   ].join('\n');
 }
 
+function getDisplayLanguages(languageTotals: LanguageTotals): string[] {
+  const rankedLanguages = [...languageTotals.entries()]
+    .sort(([, aBytes], [, bBytes]) => bBytes - aBytes)
+    .map(([language]) => language);
+  const displayLanguages = rankedLanguages.slice(0, 8);
+
+  for (const pinnedLanguage of PINNED_LANGUAGES) {
+    if (languageTotals.has(pinnedLanguage) && !displayLanguages.includes(pinnedLanguage)) {
+      displayLanguages.push(pinnedLanguage);
+    }
+  }
+
+  return displayLanguages;
+}
+
 function renderSummary(languageTotals: LanguageTotals): string {
   const totalBytes = [...languageTotals.values()].reduce((sum, bytes) => sum + bytes, 0);
 
@@ -100,24 +147,23 @@ function renderSummary(languageTotals: LanguageTotals): string {
     ].join('\n');
   }
 
-  const rows = [...languageTotals.entries()]
-    .sort(([, aBytes], [, bBytes]) => bBytes - aBytes)
-    .slice(0, 8)
-    .map(([language, bytes]) => {
+  const rows = getDisplayLanguages(languageTotals)
+    .map((language) => {
+      const bytes = languageTotals.get(language) || 0;
       const share = bytes / totalBytes;
       const band = share >= 0.4 ? 'High' : share >= 0.15 ? 'Medium' : 'Low';
-      return `| ${language} | ${band} |`;
+      return `| ${renderLanguageLabel(language)} | ${band} |`;
     });
 
   return [
     START_MARKER,
     '### Private language summary',
     '',
-    '| Language | Activity |',
+    '| Technology | Activity |',
     '| --- | --- |',
     ...rows,
     '',
-    '_Aggregated from private repository language statistics. Repository names, repository lists, exact percentages, and API responses are intentionally omitted._',
+    '_Aggregated from private repository language statistics. Repository names, repository lists, exact percentages, and API responses are intentionally omitted. Rust and Go are kept visible when GitHub reports them, even if they fall outside the top activity rows._',
     END_MARKER,
   ].join('\n');
 }
