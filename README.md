@@ -44,20 +44,32 @@ private repositories の詳細は公開せず、GitHub Actions が `main` への
 <!-- PRIVATE_TECH_START -->
 ### Private technology summary
 
-Total detected private code volume: **132.4 MB**
+```mermaid
+pie showData
+    title Private Language Distribution
+    "TypeScript" : 43.9
+    "Python" : 7.6
+    "PHP" : 14.8
+    "JavaScript" : 10.6
+    "Go" : 7.8
+    "Shell" : 1.4
+    "HTML" : 3.9
+    "Rust" : 2.5
+    "Others" : 7.5
+```
 
-| Language | Code volume | Usage share | Primary signal |
-| --- | ---: | ---: | ---: |
-| <img alt="TypeScript icon" src="https://cdn.simpleicons.org/typescript/3178C6" width="18" height="18"> TypeScript | 58.1 MB | 43.9% | 22 repos |
-| <img alt="Python icon" src="https://cdn.simpleicons.org/python/3776AB" width="18" height="18"> Python | 10.1 MB | 7.6% | 10 repos |
-| <img alt="PHP icon" src="https://cdn.simpleicons.org/php/777BB4" width="18" height="18"> PHP | 19.6 MB | 14.8% | 2 repos |
-| <img alt="JavaScript icon" src="https://cdn.simpleicons.org/javascript/F7DF1E" width="18" height="18"> JavaScript | 14.0 MB | 10.6% | 6 repos |
-| <img alt="Go icon" src="https://cdn.simpleicons.org/go/00ADD8" width="18" height="18"> Go | 10.3 MB | 7.8% | 7 repos |
-| <img alt="Shell icon" src="https://cdn.simpleicons.org/gnubash/4EAA25" width="18" height="18"> Shell | 1.83 MB | 1.4% | 4 repos |
-| <img alt="HTML icon" src="https://cdn.simpleicons.org/html5/E34F26" width="18" height="18"> HTML | 5.10 MB | 3.9% | 0 repos |
-| <img alt="Rust icon" src="https://cdn.simpleicons.org/rust/000000" width="18" height="18"> Rust | 3.33 MB | 2.5% | 1 repos |
+| Technology | Share | Category |
+| --- | ---: | --- |
+| <img alt="TypeScript icon" src="https://cdn.simpleicons.org/typescript/3178C6" width="18" height="18"> TypeScript | 43.9% | Language |
+| <img alt="Python icon" src="https://cdn.simpleicons.org/python/3776AB" width="18" height="18"> Python | 7.6% | Language |
+| <img alt="PHP icon" src="https://cdn.simpleicons.org/php/777BB4" width="18" height="18"> PHP | 14.8% | Language |
+| <img alt="JavaScript icon" src="https://cdn.simpleicons.org/javascript/F7DF1E" width="18" height="18"> JavaScript | 10.6% | Language |
+| <img alt="Go icon" src="https://cdn.simpleicons.org/go/00ADD8" width="18" height="18"> Go | 7.8% | Language |
+| <img alt="Shell icon" src="https://cdn.simpleicons.org/gnubash/4EAA25" width="18" height="18"> Shell | 1.4% | Language |
+| <img alt="HTML icon" src="https://cdn.simpleicons.org/html5/E34F26" width="18" height="18"> HTML | 3.9% | Language |
+| <img alt="Rust icon" src="https://cdn.simpleicons.org/rust/000000" width="18" height="18"> Rust | 2.5% | Language |
 
-_Aggregated from private repository language byte statistics, each repository's primary language signal, and safe repository topics for framework signals. Repository names, repository lists, commits, branches, file paths, and API responses are intentionally omitted. Rust and Go are kept visible when GitHub reports them, even if they fall outside the top activity rows._
+_Private repositories are summarized only as coarse technology signals. Repository names, products, commits, branches, paths, exact code volume, repository counts, and business context are intentionally not published. Rust and Go are kept visible when GitHub reports them, even if they fall outside the top activity rows._
 <!-- PRIVATE_TECH_END -->
 
 ---
