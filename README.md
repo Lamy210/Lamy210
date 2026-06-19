@@ -42,25 +42,26 @@ private repositories の詳細は公開せず、GitHub Actions が `main` への
 ## Private Repository Insights
 
 READMEに表示する技術シグナルは、内容に対応した安全なアイコン付きで表現します。
-private language summary は GitHub が検出した言語統計と各repositoryのprimary language signalをもとに更新され、コード量だけでなく小さなGo / Rust repositoriesも反映されるようにします。
+private technology summary は GitHub が検出した言語統計、各repositoryのprimary language signal、安全なtopic signalをもとに更新され、コード量だけでなく小さなGo / Rust repositoriesやframework傾向も反映されるようにします。
 private repositories の具体的な情報は公開しません。<br>
-repo名、commit、PR、issue、branch、file path、ファイル名はREADMEにもログにも出さず、公開する場合も集計済みの安全な情報のみに限定します。
+repo名、commit、PR、issue、branch、file path、ファイル名はREADMEにもログにも出さず、公開する場合も集計済みの安全なコード量・割合・技術シグナルのみに限定します。
 
 <!-- PRIVATE_TECH_START -->
-### Private language summary
+### Private technology summary
 
-| Technology | Activity |
-| --- | --- |
-| <img alt="TypeScript icon" src="https://cdn.simpleicons.org/typescript/3178C6" width="18" height="18"> TypeScript | High |
-| <img alt="Python icon" src="https://cdn.simpleicons.org/python/3776AB" width="18" height="18"> Python | Low |
-| <img alt="PHP icon" src="https://cdn.simpleicons.org/php/777BB4" width="18" height="18"> PHP | Low |
-| <img alt="JavaScript icon" src="https://cdn.simpleicons.org/javascript/F7DF1E" width="18" height="18"> JavaScript | Low |
-| <img alt="Go icon" src="https://cdn.simpleicons.org/go/00ADD8" width="18" height="18"> Go | Low |
-| <img alt="Shell icon" src="https://cdn.simpleicons.org/gnubash/4EAA25" width="18" height="18"> Shell | Low |
-| <img alt="HTML icon" src="https://cdn.simpleicons.org/html5/E34F26" width="18" height="18"> HTML | Low |
-| <img alt="Rust icon" src="https://cdn.simpleicons.org/rust/000000" width="18" height="18"> Rust | Low |
+Total detected private code volume: **refresh pending**
 
-_Aggregated from private repository language statistics and each repository's primary language signal, so smaller Go/Rust repositories are not hidden by byte volume alone. Repository names, repository lists, exact percentages, and API responses are intentionally omitted. Rust and Go are kept visible when GitHub reports them, even if they fall outside the top activity rows._
+| Language | Code volume | Usage share | Primary signal |
+| --- | ---: | ---: | ---: |
+| Private language statistics | refresh pending | refresh pending | refresh pending |
+
+### Private framework signals
+
+| Framework | Detected usage |
+| --- | ---: |
+| Safe repository topic signals | refresh pending |
+
+_The next scheduled private technology update replaces this placeholder with aggregate language byte volume, usage share, primary language counts, and safe framework topic signals. Repository names, repository lists, commits, branches, file paths, and API responses are intentionally omitted. Rust and Go are kept visible when GitHub reports them, even if they fall outside the top activity rows._
 <!-- PRIVATE_TECH_END -->
 
 ---

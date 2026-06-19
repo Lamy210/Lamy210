@@ -19,11 +19,72 @@ type GitHubRepository = {
   fork?: boolean;
   languages_url?: string;
   language?: string | null;
+  topics?: string[];
 };
 
 type LanguageTotals = Map<string, number>;
 type RepositoryLanguageCounts = Map<string, number>;
 type LanguageResponse = Record<string, number>;
+type FrameworkCounts = Map<string, number>;
+
+const FRAMEWORK_TOPIC_LABELS: Record<string, string> = {
+  react: 'React',
+  nextjs: 'Next.js',
+  'next-js': 'Next.js',
+  vue: 'Vue',
+  nuxt: 'Nuxt',
+  svelte: 'Svelte',
+  sveltekit: 'SvelteKit',
+  angular: 'Angular',
+  astro: 'Astro',
+  remix: 'Remix',
+  vite: 'Vite',
+  express: 'Express',
+  fastify: 'Fastify',
+  nestjs: 'NestJS',
+  django: 'Django',
+  flask: 'Flask',
+  fastapi: 'FastAPI',
+  rails: 'Ruby on Rails',
+  laravel: 'Laravel',
+  symfony: 'Symfony',
+  flutter: 'Flutter',
+  'react-native': 'React Native',
+  tauri: 'Tauri',
+  electron: 'Electron',
+  axum: 'Axum',
+  actix: 'Actix',
+  gin: 'Gin',
+};
+
+const FRAMEWORK_ICONS: Record<string, string> = {
+  React: 'https://cdn.simpleicons.org/react/61DAFB',
+  'Next.js': 'https://cdn.simpleicons.org/nextdotjs/000000',
+  Vue: 'https://cdn.simpleicons.org/vuedotjs/4FC08D',
+  Nuxt: 'https://cdn.simpleicons.org/nuxt/00DC82',
+  Svelte: 'https://cdn.simpleicons.org/svelte/FF3E00',
+  SvelteKit: 'https://cdn.simpleicons.org/svelte/FF3E00',
+  Angular: 'https://cdn.simpleicons.org/angular/DD0031',
+  Astro: 'https://cdn.simpleicons.org/astro/BC52EE',
+  Remix: 'https://cdn.simpleicons.org/remix/000000',
+  Vite: 'https://cdn.simpleicons.org/vite/646CFF',
+  Express: 'https://cdn.simpleicons.org/express/000000',
+  Fastify: 'https://cdn.simpleicons.org/fastify/000000',
+  NestJS: 'https://cdn.simpleicons.org/nestjs/E0234E',
+  Django: 'https://cdn.simpleicons.org/django/092E20',
+  Flask: 'https://cdn.simpleicons.org/flask/000000',
+  FastAPI: 'https://cdn.simpleicons.org/fastapi/009688',
+  'Ruby on Rails': 'https://cdn.simpleicons.org/rubyonrails/CC0000',
+  Laravel: 'https://cdn.simpleicons.org/laravel/FF2D20',
+  Symfony: 'https://cdn.simpleicons.org/symfony/000000',
+  Flutter: 'https://cdn.simpleicons.org/flutter/02569B',
+  'React Native': 'https://cdn.simpleicons.org/react/61DAFB',
+  Tauri: 'https://cdn.simpleicons.org/tauri/FFC131',
+  Electron: 'https://cdn.simpleicons.org/electron/47848F',
+  Axum: 'https://cdn.simpleicons.org/rust/000000',
+  Actix: 'https://cdn.simpleicons.org/rust/000000',
+  Gin: 'https://cdn.simpleicons.org/go/00ADD8',
+};
 
 const LANGUAGE_ICONS: Record<string, string> = {
   TypeScript: 'https://cdn.simpleicons.org/typescript/3178C6',
@@ -45,11 +106,18 @@ const LANGUAGE_ICONS: Record<string, string> = {
   Svelte: 'https://cdn.simpleicons.org/svelte/FF3E00',
 };
 
-function renderLanguageLabel(language: string): string {
-  const iconUrl = LANGUAGE_ICONS[language];
-  if (!iconUrl) return language;
+function renderIconLabel(label: string, iconUrl?: string): string {
+  if (!iconUrl) return label;
 
-  return `<img alt=\"${language} icon\" src=\"${iconUrl}\" width=\"18\" height=\"18\"> ${language}`;
+  return `<img alt=\"${label} icon\" src=\"${iconUrl}\" width=\"18\" height=\"18\"> ${label}`;
+}
+
+function renderLanguageLabel(language: string): string {
+  return renderIconLabel(language, LANGUAGE_ICONS[language]);
+}
+
+function renderFrameworkLabel(framework: string): string {
+  return renderIconLabel(framework, FRAMEWORK_ICONS[framework]);
 }
 
 const headers = TOKEN
@@ -178,7 +246,63 @@ function getDisplayLanguages(
   return displayLanguages;
 }
 
-function renderSummary(languageTotals: LanguageTotals, repositoryLanguageCounts: RepositoryLanguageCounts): string {
+function formatBytes(bytes: number): string {
+  if (bytes < 1024) return `${bytes} B`;
+
+  const units = ['KB', 'MB', 'GB'];
+  let value = bytes / 1024;
+  let unitIndex = 0;
+
+  while (value >= 1024 && unitIndex < units.length - 1) {
+    value /= 1024;
+    unitIndex += 1;
+  }
+
+  return `${value >= 10 ? value.toFixed(1) : value.toFixed(2)} ${units[unitIndex]}`;
+}
+
+function formatPercent(numerator: number, denominator: number): string {
+  if (denominator === 0) return '0.0%';
+
+  return `${((numerator / denominator) * 100).toFixed(1)}%`;
+}
+
+function collectFrameworkCounts(repos: GitHubRepository[]): FrameworkCounts {
+  const frameworkCounts: FrameworkCounts = new Map();
+
+  for (const repo of repos) {
+    if (!repo.private || repo.fork) continue;
+
+    const frameworksForRepo = new Set<string>();
+    for (const topic of repo.topics || []) {
+      const framework = FRAMEWORK_TOPIC_LABELS[topic.toLowerCase()];
+      if (framework) frameworksForRepo.add(framework);
+    }
+
+    for (const framework of frameworksForRepo) {
+      frameworkCounts.set(framework, (frameworkCounts.get(framework) || 0) + 1);
+    }
+  }
+
+  return frameworkCounts;
+}
+
+function renderFrameworkRows(frameworkCounts: FrameworkCounts): string[] {
+  return [...frameworkCounts.entries()]
+    .sort(([aFramework, aCount], [bFramework, bCount]) => {
+      if (aCount !== bCount) return bCount - aCount;
+
+      return aFramework.localeCompare(bFramework);
+    })
+    .slice(0, 8)
+    .map(([framework, count]) => `| ${renderFrameworkLabel(framework)} | ${count} repos |`);
+}
+
+function renderSummary(
+  languageTotals: LanguageTotals,
+  repositoryLanguageCounts: RepositoryLanguageCounts,
+  frameworkCounts: FrameworkCounts,
+): string {
   const totalBytes = [...languageTotals.values()].reduce((sum, bytes) => sum + bytes, 0);
   const totalRepositoryLanguageSignals = [...repositoryLanguageCounts.values()].reduce((sum, count) => sum + count, 0);
 
@@ -190,33 +314,41 @@ function renderSummary(languageTotals: LanguageTotals, repositoryLanguageCounts:
     ].join('\n');
   }
 
-  const rows = getDisplayLanguages(
+  const languageRows = getDisplayLanguages(
     languageTotals,
     repositoryLanguageCounts,
     totalBytes,
     totalRepositoryLanguageSignals,
   )
     .map((language) => {
-      const score = getLanguageScore(
-        language,
-        languageTotals,
-        repositoryLanguageCounts,
-        totalBytes,
-        totalRepositoryLanguageSignals,
-      );
-      const band = score >= 0.4 ? 'High' : score >= 0.15 ? 'Medium' : 'Low';
-      return `| ${renderLanguageLabel(language)} | ${band} |`;
+      const bytes = languageTotals.get(language) || 0;
+      const repositorySignals = repositoryLanguageCounts.get(language) || 0;
+
+      return `| ${renderLanguageLabel(language)} | ${formatBytes(bytes)} | ${formatPercent(bytes, totalBytes)} | ${repositorySignals} repos |`;
     });
+  const frameworkRows = renderFrameworkRows(frameworkCounts);
 
   return [
     START_MARKER,
-    '### Private language summary',
+    '### Private technology summary',
     '',
-    '| Technology | Activity |',
-    '| --- | --- |',
-    ...rows,
+    `Total detected private code volume: **${formatBytes(totalBytes)}**`,
     '',
-    "_Aggregated from private repository language statistics and each repository's primary language signal, so smaller Go/Rust repositories are not hidden by byte volume alone. Repository names, repository lists, exact percentages, and API responses are intentionally omitted. Rust and Go are kept visible when GitHub reports them, even if they fall outside the top activity rows._",
+    '| Language | Code volume | Usage share | Primary signal |',
+    '| --- | ---: | ---: | ---: |',
+    ...languageRows,
+    ...(frameworkRows.length > 0
+      ? [
+          '',
+          '### Private framework signals',
+          '',
+          '| Framework | Detected usage |',
+          '| --- | ---: |',
+          ...frameworkRows,
+        ]
+      : []),
+    '',
+    "_Aggregated from private repository language byte statistics, each repository's primary language signal, and safe repository topics for framework signals. Repository names, repository lists, commits, branches, file paths, and API responses are intentionally omitted. Rust and Go are kept visible when GitHub reports them, even if they fall outside the top activity rows._",
     END_MARKER,
   ].join('\n');
 }
@@ -249,6 +381,8 @@ async function main(): Promise<void> {
   const repos = await requestAllPages<GitHubRepository>('https://api.github.com/user/repos?visibility=private&affiliation=owner,collaborator,organization_member&per_page=100');
   const languageTotals: LanguageTotals = new Map();
   const repositoryLanguageCounts: RepositoryLanguageCounts = new Map();
+  const frameworkCounts = collectFrameworkCounts(repos);
+
   for (const repo of repos) {
     if (!repo.private || repo.fork) continue;
 
@@ -264,7 +398,11 @@ async function main(): Promise<void> {
     }
   }
 
-  const nextReadme = replacePrivateTechSection(readme, renderSummary(languageTotals, repositoryLanguageCounts));
+  const nextReadme = replacePrivateTechSection(readme, renderSummary(
+    languageTotals,
+    repositoryLanguageCounts,
+    frameworkCounts,
+  ));
 
   if (nextReadme !== readme) {
     await writeFile(README_PATH, nextReadme);
