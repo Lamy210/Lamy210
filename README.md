@@ -49,18 +49,18 @@ repo名、commit、PR、issue、branch、file path、ファイル名はREADMEに
 <!-- PRIVATE_TECH_START -->
 ### Private language summary
 
-| Language | Activity |
+| Technology | Activity |
 | --- | --- |
-| TypeScript | High |
-| PHP | Low |
-| JavaScript | Low |
-| Go | Low |
-| Python | Low |
-| HTML | Low |
-| CSS | Low |
-| Rust | Low |
+| <img alt="TypeScript icon" src="https://cdn.simpleicons.org/typescript/3178C6" width="18" height="18"> TypeScript | High |
+| <img alt="Python icon" src="https://cdn.simpleicons.org/python/3776AB" width="18" height="18"> Python | Low |
+| <img alt="PHP icon" src="https://cdn.simpleicons.org/php/777BB4" width="18" height="18"> PHP | Low |
+| <img alt="JavaScript icon" src="https://cdn.simpleicons.org/javascript/F7DF1E" width="18" height="18"> JavaScript | Low |
+| <img alt="Go icon" src="https://cdn.simpleicons.org/go/00ADD8" width="18" height="18"> Go | Low |
+| <img alt="Shell icon" src="https://cdn.simpleicons.org/gnubash/4EAA25" width="18" height="18"> Shell | Low |
+| <img alt="HTML icon" src="https://cdn.simpleicons.org/html5/E34F26" width="18" height="18"> HTML | Low |
+| <img alt="Rust icon" src="https://cdn.simpleicons.org/rust/000000" width="18" height="18"> Rust | Low |
 
-_Aggregated from private repository language statistics and each repository's primary language signal, so smaller Go/Rust repositories are not hidden by byte volume alone. Repository names, repository lists, exact percentages, and API responses are intentionally omitted._
+_Aggregated from private repository language statistics and each repository's primary language signal, so smaller Go/Rust repositories are not hidden by byte volume alone. Repository names, repository lists, exact percentages, and API responses are intentionally omitted. Rust and Go are kept visible when GitHub reports them, even if they fall outside the top activity rows._
 <!-- PRIVATE_TECH_END -->
 
 ---
