@@ -69,7 +69,7 @@ pie showData
 | <img alt="HTML icon" src="https://cdn.simpleicons.org/html5/E34F26" width="18" height="18"> HTML | 3.9% | Language |
 | <img alt="Rust icon" src="https://cdn.simpleicons.org/rust/000000" width="18" height="18"> Rust | 2.5% | Language |
 
-_Private repositories are summarized only as coarse technology signals. Repository names, products, commits, branches, paths, exact code volume, repository counts, and business context are intentionally not published. Rust and Go are kept visible when GitHub reports them, even if they fall outside the top activity rows._
+_Private repositories are summarized only as coarse technology signals. Language shares use GitHub-reported code volume, and framework/tool signals come from repository topics plus common manifest files. Repository names, products, commits, branches, paths, exact code volume, repository counts, and business context are intentionally not published. Rust and Go are kept visible when GitHub reports them, even if they fall outside the top activity rows._
 <!-- PRIVATE_TECH_END -->
 
 ---

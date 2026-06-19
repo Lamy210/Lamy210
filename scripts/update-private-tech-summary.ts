@@ -58,6 +58,7 @@ const FRAMEWORK_TOPIC_LABELS: Record<string, string> = {
   symfony: 'Symfony',
   flutter: 'Flutter',
   'react-native': 'React Native',
+  expo: 'Expo',
   tauri: 'Tauri',
   electron: 'Electron',
   axum: 'Axum',
@@ -89,6 +90,7 @@ const FRAMEWORK_ICONS: Record<string, string> = {
   Symfony: 'https://cdn.simpleicons.org/symfony/000000',
   Flutter: 'https://cdn.simpleicons.org/flutter/02569B',
   'React Native': 'https://cdn.simpleicons.org/react/61DAFB',
+  Expo: 'https://cdn.simpleicons.org/expo/000020',
   Tauri: 'https://cdn.simpleicons.org/tauri/FFC131',
   Electron: 'https://cdn.simpleicons.org/electron/47848F',
   Axum: 'https://cdn.simpleicons.org/rust/000000',
@@ -129,6 +131,8 @@ const PACKAGE_FRAMEWORK_LABELS: Record<string, string> = {
   tauri: 'Tauri',
   '@tauri-apps/api': 'Tauri',
   electron: 'Electron',
+  'react-native': 'React Native',
+  expo: 'Expo',
 };
 
 const TEXT_MANIFEST_FRAMEWORK_PATTERNS: Array<[RegExp, string]> = [
@@ -256,8 +260,6 @@ function renderRedactedSummary(): string {
 function getDisplayLanguages(
   languageTotals: LanguageTotals,
   repositoryLanguageCounts: RepositoryLanguageCounts,
-  totalBytes: number,
-  totalRepositoryLanguageSignals: number,
 ): string[] {
   const rankedLanguages = [...new Set([...languageTotals.keys(), ...repositoryLanguageCounts.keys()])]
     .sort((aLanguage, bLanguage) => {
@@ -322,10 +324,10 @@ function decodeContentResponse(contentResponse: ContentResponse): string | null 
 async function requestRepositoryFile(repo: GitHubRepository, filePath: string): Promise<string | null> {
   if (!repo.contents_url) return null;
 
-  const url = repo.contents_url.replace('{+path}', encodeURIComponent(filePath));
+  const url = repo.contents_url.replace('{+path}', filePath);
   const response = await fetch(url, { headers: headers || undefined });
 
-  if (response.status === 404) return null;
+  if (response.status === 403 || response.status === 404) return null;
   if (!response.ok) {
     throw new Error(`GitHub contents API request failed with status ${response.status}.`);
   }
@@ -364,13 +366,17 @@ async function collectRepositoryFrameworkEvidence(repo: GitHubRepository): Promi
   collectTopicFrameworkEvidence(repo, frameworkEvidence);
 
   for (const manifestPath of MANIFEST_PATHS) {
-    const manifest = await requestRepositoryFile(repo, manifestPath);
-    if (!manifest) continue;
+    try {
+      const manifest = await requestRepositoryFile(repo, manifestPath);
+      if (!manifest) continue;
 
-    if (manifestPath === 'package.json') {
-      collectPackageJsonFrameworkEvidence(manifest, frameworkEvidence);
-    } else {
-      collectTextManifestFrameworkEvidence(manifest, frameworkEvidence);
+      if (manifestPath === 'package.json') {
+        collectPackageJsonFrameworkEvidence(manifest, frameworkEvidence);
+      } else {
+        collectTextManifestFrameworkEvidence(manifest, frameworkEvidence);
+      }
+    } catch {
+      // Keep the profile update resilient when one manifest cannot be read.
     }
   }
 
@@ -442,9 +448,8 @@ function renderSummary(
   frameworkCounts: FrameworkCounts,
 ): string {
   const totalBytes = [...languageTotals.values()].reduce((sum, bytes) => sum + bytes, 0);
-  const totalRepositoryLanguageSignals = [...repositoryLanguageCounts.values()].reduce((sum, count) => sum + count, 0);
 
-  if (totalBytes === 0 && totalRepositoryLanguageSignals === 0) {
+  if (totalBytes === 0 && repositoryLanguageCounts.size === 0) {
     return [
       START_MARKER,
       'Private repository technology summary is not available yet.',
@@ -455,8 +460,6 @@ function renderSummary(
   const displayLanguages = getDisplayLanguages(
     languageTotals,
     repositoryLanguageCounts,
-    totalBytes,
-    totalRepositoryLanguageSignals,
   );
   const languageShares = getLanguageShares(displayLanguages, languageTotals, totalBytes);
   const languageRows = languageShares
@@ -481,7 +484,7 @@ function renderSummary(
         ]
       : []),
     '',
-    "_Private repositories are summarized only as coarse technology signals. Repository names, products, commits, branches, paths, exact code volume, repository counts, and business context are intentionally not published. Rust and Go are kept visible when GitHub reports them, even if they fall outside the top activity rows._",
+    "_Private repositories are summarized only as coarse technology signals. Language shares use GitHub-reported code volume, and framework/tool signals come from repository topics plus common manifest files. Repository names, products, commits, branches, paths, exact code volume, repository counts, and business context are intentionally not published. Rust and Go are kept visible when GitHub reports them, even if they fall outside the top activity rows._",
     END_MARKER,
   ].join('\n');
 }
