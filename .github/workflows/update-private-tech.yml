@@ -34,8 +34,16 @@ jobs:
         with:
           node-version: "22"
 
-      - name: Update private technology summary
+      - name: Update redacted private technology summary
+        if: vars.PRIVATE_TECH_SUMMARY_MODE != 'coarse'
         env:
+          PRIVATE_TECH_SUMMARY_MODE: ${{ vars.PRIVATE_TECH_SUMMARY_MODE }}
+        run: node --experimental-strip-types scripts/update-private-tech-summary.ts
+
+      - name: Update coarse private technology summary
+        if: vars.PRIVATE_TECH_SUMMARY_MODE == 'coarse'
+        env:
+          PRIVATE_TECH_SUMMARY_MODE: ${{ vars.PRIVATE_TECH_SUMMARY_MODE }}
           PRIVATE_REPO_STATS_TOKEN: ${{ secrets.PRIVATE_REPO_STATS_TOKEN }}
         run: node --experimental-strip-types scripts/update-private-tech-summary.ts
 

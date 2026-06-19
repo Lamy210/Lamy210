@@ -16,5 +16,5 @@ Here are some ideas to get you started:
 -->
 
 <!-- PRIVATE_TECH_START -->
-Private repository technology summary is not available yet.
+Private repository technology activity is tracked privately. Details are intentionally not published from this public repository.
 <!-- PRIVATE_TECH_END -->

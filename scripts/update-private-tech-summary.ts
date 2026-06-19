@@ -7,7 +7,9 @@ const README_PATH = path.join(process.cwd(), 'README.md');
 const START_MARKER = '<!-- PRIVATE_TECH_START -->';
 const END_MARKER = '<!-- PRIVATE_TECH_END -->';
 const TOKEN = process.env.PRIVATE_REPO_STATS_TOKEN;
+const SUMMARY_MODE = process.env.PRIVATE_TECH_SUMMARY_MODE;
 const API_VERSION = '2022-11-28';
+const MIN_SOURCE_REPOSITORIES = 5;
 
 type GitHubRepository = {
   private?: boolean;
@@ -29,7 +31,7 @@ const LANGUAGE_CATEGORIES: Record<string, TechnologyCategory> = {
   Astro: 'Web',
   Python: 'Data',
   R: 'Data',
-  Jupyter Notebook: 'Data',
+  'Jupyter Notebook': 'Data',
   SQL: 'Data',
   Dockerfile: 'Infrastructure',
   HCL: 'Infrastructure',
@@ -49,18 +51,20 @@ const LANGUAGE_CATEGORIES: Record<string, TechnologyCategory> = {
   PHP: 'Application',
 };
 
-if (!TOKEN) {
-  throw new Error('PRIVATE_REPO_STATS_TOKEN is required.');
-}
-
-const headers = {
-  Accept: 'application/vnd.github+json',
-  Authorization: `Bearer ${TOKEN}`,
-  'X-GitHub-Api-Version': API_VERSION,
-  'User-Agent': 'private-tech-summary-updater',
-};
+const headers = TOKEN
+  ? {
+      Accept: 'application/vnd.github+json',
+      Authorization: `Bearer ${TOKEN}`,
+      'X-GitHub-Api-Version': API_VERSION,
+      'User-Agent': 'private-tech-summary-updater',
+    }
+  : null;
 
 async function requestJson<T>(url: string): Promise<T> {
+  if (!headers) {
+    throw new Error('PRIVATE_REPO_STATS_TOKEN is required for coarse mode.');
+  }
+
   const response = await fetch(url, { headers });
 
   if (!response.ok) {
@@ -84,6 +88,10 @@ function parseNextLink(linkHeader: string | null): string | null {
 }
 
 async function requestAllPages<T>(url: string): Promise<T[]> {
+  if (!headers) {
+    throw new Error('PRIVATE_REPO_STATS_TOKEN is required for coarse mode.');
+  }
+
   const items: T[] = [];
   let nextUrl: string | null = url;
 
@@ -106,8 +114,20 @@ async function requestAllPages<T>(url: string): Promise<T[]> {
   return items;
 }
 
-function renderSummary(languageTotals: LanguageTotals): string {
+function renderRedactedSummary(): string {
+  return [
+    START_MARKER,
+    'Private repository technology activity is tracked privately. Details are intentionally not published from this public repository.',
+    END_MARKER,
+  ].join('\n');
+}
+
+function renderSummary(languageTotals: LanguageTotals, sourceRepositoryCount: number): string {
   const totalBytes = [...languageTotals.values()].reduce((sum, bytes) => sum + bytes, 0);
+
+  if (sourceRepositoryCount < MIN_SOURCE_REPOSITORIES) {
+    return renderRedactedSummary();
+  }
 
   if (totalBytes === 0) {
     return [
@@ -160,20 +180,31 @@ function replacePrivateTechSection(readme: string, nextSection: string): string 
 }
 
 async function main(): Promise<void> {
+  const readme = await readFile(README_PATH, 'utf8');
+
+  if (SUMMARY_MODE !== 'coarse') {
+    const nextReadme = replacePrivateTechSection(readme, renderRedactedSummary());
+    if (nextReadme !== readme) {
+      await writeFile(README_PATH, nextReadme);
+    }
+    return;
+  }
+
   const repos = await requestAllPages<GitHubRepository>('https://api.github.com/user/repos?visibility=private&affiliation=owner,collaborator,organization_member&per_page=100');
   const languageTotals: LanguageTotals = new Map();
+  let sourceRepositoryCount = 0;
 
   for (const repo of repos) {
     if (!repo.private || repo.fork || !repo.languages_url) continue;
 
+    sourceRepositoryCount += 1;
     const languages = await requestJson<LanguageResponse>(repo.languages_url);
     for (const [language, bytes] of Object.entries(languages)) {
       languageTotals.set(language, (languageTotals.get(language) || 0) + bytes);
     }
   }
 
-  const readme = await readFile(README_PATH, 'utf8');
-  const nextReadme = replacePrivateTechSection(readme, renderSummary(languageTotals));
+  const nextReadme = replacePrivateTechSection(readme, renderSummary(languageTotals, sourceRepositoryCount));
 
   if (nextReadme !== readme) {
     await writeFile(README_PATH, nextReadme);
