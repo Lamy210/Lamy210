@@ -18,9 +18,11 @@ type GitHubRepository = {
   private?: boolean;
   fork?: boolean;
   languages_url?: string;
+  language?: string | null;
 };
 
 type LanguageTotals = Map<string, number>;
+type RepositoryLanguageCounts = Map<string, number>;
 type LanguageResponse = Record<string, number>;
 
 const LANGUAGE_ICONS: Record<string, string> = {
@@ -121,14 +123,54 @@ function renderRedactedSummary(): string {
   ].join('\n');
 }
 
-function getDisplayLanguages(languageTotals: LanguageTotals): string[] {
-  const rankedLanguages = [...languageTotals.entries()]
-    .sort(([, aBytes], [, bBytes]) => bBytes - aBytes)
-    .map(([language]) => language);
+function getLanguageScore(
+  language: string,
+  languageTotals: LanguageTotals,
+  repositoryLanguageCounts: RepositoryLanguageCounts,
+  totalBytes: number,
+  totalRepositoryLanguageSignals: number,
+): number {
+  const byteShare = totalBytes === 0 ? 0 : (languageTotals.get(language) || 0) / totalBytes;
+  const repositoryShare = totalRepositoryLanguageSignals === 0
+    ? 0
+    : (repositoryLanguageCounts.get(language) || 0) / totalRepositoryLanguageSignals;
+
+  return byteShare * 0.65 + repositoryShare * 0.35;
+}
+
+function getDisplayLanguages(
+  languageTotals: LanguageTotals,
+  repositoryLanguageCounts: RepositoryLanguageCounts,
+  totalBytes: number,
+  totalRepositoryLanguageSignals: number,
+): string[] {
+  const rankedLanguages = [...new Set([...languageTotals.keys(), ...repositoryLanguageCounts.keys()])]
+    .sort((aLanguage, bLanguage) => {
+      const scoreDifference = getLanguageScore(
+        bLanguage,
+        languageTotals,
+        repositoryLanguageCounts,
+        totalBytes,
+        totalRepositoryLanguageSignals,
+      ) - getLanguageScore(
+        aLanguage,
+        languageTotals,
+        repositoryLanguageCounts,
+        totalBytes,
+        totalRepositoryLanguageSignals,
+      );
+
+      if (scoreDifference !== 0) return scoreDifference;
+
+      return (languageTotals.get(bLanguage) || 0) - (languageTotals.get(aLanguage) || 0);
+    });
   const displayLanguages = rankedLanguages.slice(0, 8);
 
   for (const pinnedLanguage of PINNED_LANGUAGES) {
-    if (languageTotals.has(pinnedLanguage) && !displayLanguages.includes(pinnedLanguage)) {
+    if (
+      (languageTotals.has(pinnedLanguage) || repositoryLanguageCounts.has(pinnedLanguage))
+      && !displayLanguages.includes(pinnedLanguage)
+    ) {
       displayLanguages.push(pinnedLanguage);
     }
   }
@@ -136,10 +178,11 @@ function getDisplayLanguages(languageTotals: LanguageTotals): string[] {
   return displayLanguages;
 }
 
-function renderSummary(languageTotals: LanguageTotals): string {
+function renderSummary(languageTotals: LanguageTotals, repositoryLanguageCounts: RepositoryLanguageCounts): string {
   const totalBytes = [...languageTotals.values()].reduce((sum, bytes) => sum + bytes, 0);
+  const totalRepositoryLanguageSignals = [...repositoryLanguageCounts.values()].reduce((sum, count) => sum + count, 0);
 
-  if (totalBytes === 0) {
+  if (totalBytes === 0 && totalRepositoryLanguageSignals === 0) {
     return [
       START_MARKER,
       'Private repository technology summary is not available yet.',
@@ -147,11 +190,21 @@ function renderSummary(languageTotals: LanguageTotals): string {
     ].join('\n');
   }
 
-  const rows = getDisplayLanguages(languageTotals)
+  const rows = getDisplayLanguages(
+    languageTotals,
+    repositoryLanguageCounts,
+    totalBytes,
+    totalRepositoryLanguageSignals,
+  )
     .map((language) => {
-      const bytes = languageTotals.get(language) || 0;
-      const share = bytes / totalBytes;
-      const band = share >= 0.4 ? 'High' : share >= 0.15 ? 'Medium' : 'Low';
+      const score = getLanguageScore(
+        language,
+        languageTotals,
+        repositoryLanguageCounts,
+        totalBytes,
+        totalRepositoryLanguageSignals,
+      );
+      const band = score >= 0.4 ? 'High' : score >= 0.15 ? 'Medium' : 'Low';
       return `| ${renderLanguageLabel(language)} | ${band} |`;
     });
 
@@ -163,7 +216,7 @@ function renderSummary(languageTotals: LanguageTotals): string {
     '| --- | --- |',
     ...rows,
     '',
-    '_Aggregated from private repository language statistics. Repository names, repository lists, exact percentages, and API responses are intentionally omitted. Rust and Go are kept visible when GitHub reports them, even if they fall outside the top activity rows._',
+    "_Aggregated from private repository language statistics and each repository's primary language signal, so smaller Go/Rust repositories are not hidden by byte volume alone. Repository names, repository lists, exact percentages, and API responses are intentionally omitted. Rust and Go are kept visible when GitHub reports them, even if they fall outside the top activity rows._",
     END_MARKER,
   ].join('\n');
 }
@@ -195,8 +248,15 @@ async function main(): Promise<void> {
 
   const repos = await requestAllPages<GitHubRepository>('https://api.github.com/user/repos?visibility=private&affiliation=owner,collaborator,organization_member&per_page=100');
   const languageTotals: LanguageTotals = new Map();
+  const repositoryLanguageCounts: RepositoryLanguageCounts = new Map();
   for (const repo of repos) {
-    if (!repo.private || repo.fork || !repo.languages_url) continue;
+    if (!repo.private || repo.fork) continue;
+
+    if (repo.language) {
+      repositoryLanguageCounts.set(repo.language, (repositoryLanguageCounts.get(repo.language) || 0) + 1);
+    }
+
+    if (!repo.languages_url) continue;
 
     const languages = await requestJson<LanguageResponse>(repo.languages_url);
     for (const [language, bytes] of Object.entries(languages)) {
@@ -204,7 +264,7 @@ async function main(): Promise<void> {
     }
   }
 
-  const nextReadme = replacePrivateTechSection(readme, renderSummary(languageTotals));
+  const nextReadme = replacePrivateTechSection(readme, renderSummary(languageTotals, repositoryLanguageCounts));
 
   if (nextReadme !== readme) {
     await writeFile(README_PATH, nextReadme);

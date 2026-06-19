@@ -42,7 +42,7 @@ private repositories の詳細は公開せず、GitHub Actions が `main` への
 ## Private Repository Insights
 
 READMEに表示する技術シグナルは、内容に対応した安全なアイコン付きで表現します。
-private language summary は GitHub が検出した言語統計をもとに更新され、Rust / Go は検出されていれば上位外でも表示対象に残します。
+private language summary は GitHub が検出した言語統計と各repositoryのprimary language signalをもとに更新され、コード量だけでなく小さなGo / Rust repositoriesも反映されるようにします。
 private repositories の具体的な情報は公開しません。<br>
 repo名、commit、PR、issue、branch、file path、ファイル名はREADMEにもログにも出さず、公開する場合も集計済みの安全な情報のみに限定します。
 
@@ -60,7 +60,7 @@ repo名、commit、PR、issue、branch、file path、ファイル名はREADMEに
 | CSS | Low |
 | Rust | Low |
 
-_Aggregated from private repository language statistics. Repository names, repository lists, exact percentages, and API responses are intentionally omitted._
+_Aggregated from private repository language statistics and each repository's primary language signal, so smaller Go/Rust repositories are not hidden by byte volume alone. Repository names, repository lists, exact percentages, and API responses are intentionally omitted._
 <!-- PRIVATE_TECH_END -->
 
 ---
