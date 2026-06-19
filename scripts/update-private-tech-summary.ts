@@ -246,25 +246,18 @@ function getDisplayLanguages(
   return displayLanguages;
 }
 
-function formatBytes(bytes: number): string {
-  if (bytes < 1024) return `${bytes} B`;
+function getPercentValue(numerator: number, denominator: number): number {
+  if (denominator === 0 || numerator <= 0) return 0;
 
-  const units = ['KB', 'MB', 'GB'];
-  let value = bytes / 1024;
-  let unitIndex = 0;
-
-  while (value >= 1024 && unitIndex < units.length - 1) {
-    value /= 1024;
-    unitIndex += 1;
-  }
-
-  return `${value >= 10 ? value.toFixed(1) : value.toFixed(2)} ${units[unitIndex]}`;
+  return Number(((numerator / denominator) * 100).toFixed(1));
 }
 
-function formatPercent(numerator: number, denominator: number): string {
-  if (denominator === 0) return '0.0%';
+function formatPercentValue(percent: number): string {
+  return `${percent.toFixed(1)}%`;
+}
 
-  return `${((numerator / denominator) * 100).toFixed(1)}%`;
+function escapeMermaidLabel(label: string): string {
+  return label.replace(/\\/g, '\\\\').replace(/"/g, '\\"');
 }
 
 function collectFrameworkCounts(repos: GitHubRepository[]): FrameworkCounts {
@@ -287,15 +280,57 @@ function collectFrameworkCounts(repos: GitHubRepository[]): FrameworkCounts {
   return frameworkCounts;
 }
 
-function renderFrameworkRows(frameworkCounts: FrameworkCounts): string[] {
+function renderFrameworkTags(frameworkCounts: FrameworkCounts): string[] {
   return [...frameworkCounts.entries()]
     .sort(([aFramework, aCount], [bFramework, bCount]) => {
       if (aCount !== bCount) return bCount - aCount;
 
       return aFramework.localeCompare(bFramework);
     })
-    .slice(0, 8)
-    .map(([framework, count]) => `| ${renderFrameworkLabel(framework)} | ${count} repos |`);
+    .slice(0, 10)
+    .map(([framework]) => `<code>${renderFrameworkLabel(framework)}</code>`);
+}
+
+type LanguageShare = {
+  language: string;
+  percent: number;
+};
+
+function getLanguageShares(displayLanguages: string[], languageTotals: LanguageTotals, totalBytes: number): LanguageShare[] {
+  return displayLanguages
+    .map((language) => ({
+      language,
+      percent: getPercentValue(languageTotals.get(language) || 0, totalBytes),
+    }))
+    .filter(({ percent }) => percent > 0);
+}
+
+function getPieLanguageShares(languageShares: LanguageShare[]): LanguageShare[] {
+  const topShares = languageShares.slice(0, 8);
+  const displayedTotal = topShares.reduce((sum, { percent }) => sum + percent, 0);
+  const othersPercent = Number(Math.max(0, 100 - displayedTotal).toFixed(1));
+
+  if (othersPercent > 0) {
+    return [...topShares, { language: 'Others', percent: othersPercent }];
+  }
+
+  return topShares;
+}
+
+function renderMermaidPie(languageShares: LanguageShare[]): string[] {
+  const pieRows = getPieLanguageShares(languageShares)
+    .filter(({ percent }) => percent > 0)
+    .map(({ language, percent }) => `    "${escapeMermaidLabel(language)}" : ${percent.toFixed(1)}`);
+
+  if (pieRows.length === 0) return [];
+
+  return [
+    '```mermaid',
+    'pie showData',
+    '    title Private Language Distribution',
+    ...pieRows,
+    '```',
+  ];
 }
 
 function renderSummary(
@@ -314,41 +349,36 @@ function renderSummary(
     ].join('\n');
   }
 
-  const languageRows = getDisplayLanguages(
+  const displayLanguages = getDisplayLanguages(
     languageTotals,
     repositoryLanguageCounts,
     totalBytes,
     totalRepositoryLanguageSignals,
-  )
-    .map((language) => {
-      const bytes = languageTotals.get(language) || 0;
-      const repositorySignals = repositoryLanguageCounts.get(language) || 0;
-
-      return `| ${renderLanguageLabel(language)} | ${formatBytes(bytes)} | ${formatPercent(bytes, totalBytes)} | ${repositorySignals} repos |`;
-    });
-  const frameworkRows = renderFrameworkRows(frameworkCounts);
+  );
+  const languageShares = getLanguageShares(displayLanguages, languageTotals, totalBytes);
+  const languageRows = languageShares
+    .map(({ language, percent }) => `| ${renderLanguageLabel(language)} | ${formatPercentValue(percent)} | Language |`);
+  const frameworkTags = renderFrameworkTags(frameworkCounts);
 
   return [
     START_MARKER,
     '### Private technology summary',
     '',
-    `Total detected private code volume: **${formatBytes(totalBytes)}**`,
+    ...renderMermaidPie(languageShares),
     '',
-    '| Language | Code volume | Usage share | Primary signal |',
-    '| --- | ---: | ---: | ---: |',
+    '| Technology | Share | Category |',
+    '| --- | ---: | --- |',
     ...languageRows,
-    ...(frameworkRows.length > 0
+    ...(frameworkTags.length > 0
       ? [
           '',
-          '### Private framework signals',
+          '### Private framework & tool signals',
           '',
-          '| Framework | Detected usage |',
-          '| --- | ---: |',
-          ...frameworkRows,
+          frameworkTags.join(' '),
         ]
       : []),
     '',
-    "_Aggregated from private repository language byte statistics, each repository's primary language signal, and safe repository topics for framework signals. Repository names, repository lists, commits, branches, file paths, and API responses are intentionally omitted. Rust and Go are kept visible when GitHub reports them, even if they fall outside the top activity rows._",
+    "_Private repositories are summarized only as coarse technology signals. Repository names, products, commits, branches, paths, exact code volume, repository counts, and business context are intentionally not published. Rust and Go are kept visible when GitHub reports them, even if they fall outside the top activity rows._",
     END_MARKER,
   ].join('\n');
 }
