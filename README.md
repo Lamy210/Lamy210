@@ -47,26 +47,26 @@ private repositories の詳細は公開せず、GitHub Actions が `main` への
 ```mermaid
 pie showData
     title Private Language Distribution by Code Volume
-    "TypeScript" : 41.3
-    "Go" : 12.8
+    "TypeScript" : 41.4
+    "Go" : 12.9
     "PHP" : 12.7
     "JavaScript" : 9.2
-    "Python" : 6.8
-    "Rust" : 4.2
-    "HTML" : 3.7
+    "Python" : 6.9
+    "Rust" : 4.4
+    "HTML" : 3.2
     "Dart" : 2.4
     "Others" : 6.9
 ```
 
 | Technology | Code share | Category |
 | --- | ---: | --- |
-| <img alt="TypeScript icon" src="https://cdn.simpleicons.org/typescript/3178C6" width="18" height="18"> TypeScript | 41.3% | Language |
-| <img alt="Go icon" src="https://cdn.simpleicons.org/go/00ADD8" width="18" height="18"> Go | 12.8% | Language |
+| <img alt="TypeScript icon" src="https://cdn.simpleicons.org/typescript/3178C6" width="18" height="18"> TypeScript | 41.4% | Language |
+| <img alt="Go icon" src="https://cdn.simpleicons.org/go/00ADD8" width="18" height="18"> Go | 12.9% | Language |
 | <img alt="PHP icon" src="https://cdn.simpleicons.org/php/777BB4" width="18" height="18"> PHP | 12.7% | Language |
 | <img alt="JavaScript icon" src="https://cdn.simpleicons.org/javascript/F7DF1E" width="18" height="18"> JavaScript | 9.2% | Language |
-| <img alt="Python icon" src="https://cdn.simpleicons.org/python/3776AB" width="18" height="18"> Python | 6.8% | Language |
-| <img alt="Rust icon" src="https://cdn.simpleicons.org/rust/000000" width="18" height="18"> Rust | 4.2% | Language |
-| <img alt="HTML icon" src="https://cdn.simpleicons.org/html5/E34F26" width="18" height="18"> HTML | 3.7% | Language |
+| <img alt="Python icon" src="https://cdn.simpleicons.org/python/3776AB" width="18" height="18"> Python | 6.9% | Language |
+| <img alt="Rust icon" src="https://cdn.simpleicons.org/rust/000000" width="18" height="18"> Rust | 4.4% | Language |
+| <img alt="HTML icon" src="https://cdn.simpleicons.org/html5/E34F26" width="18" height="18"> HTML | 3.2% | Language |
 | <img alt="Dart icon" src="https://cdn.simpleicons.org/dart/0175C2" width="18" height="18"> Dart | 2.4% | Language |
 
 ### Private framework & tool signals
