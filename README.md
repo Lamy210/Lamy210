@@ -47,27 +47,27 @@ private repositories の詳細は公開せず、GitHub Actions が `main` への
 ```mermaid
 pie showData
     title Private Language Distribution by Code Volume
-    "TypeScript" : 40.8
-    "Go" : 15.4
-    "PHP" : 12.2
-    "JavaScript" : 8.8
-    "Python" : 6.6
-    "Rust" : 4.3
+    "TypeScript" : 40.7
+    "Go" : 15.5
+    "PHP" : 11.9
+    "JavaScript" : 8.5
+    "Python" : 6.4
+    "Rust" : 5.2
     "HTML" : 2.8
-    "Dart" : 2.3
+    "Dart" : 2.2
     "Others" : 6.8
 ```
 
 | Technology | Code share | Category |
 | --- | ---: | --- |
-| <img alt="TypeScript icon" src="https://cdn.simpleicons.org/typescript/3178C6" width="18" height="18"> TypeScript | 40.8% | Language |
-| <img alt="Go icon" src="https://cdn.simpleicons.org/go/00ADD8" width="18" height="18"> Go | 15.4% | Language |
-| <img alt="PHP icon" src="https://cdn.simpleicons.org/php/777BB4" width="18" height="18"> PHP | 12.2% | Language |
-| <img alt="JavaScript icon" src="https://cdn.simpleicons.org/javascript/F7DF1E" width="18" height="18"> JavaScript | 8.8% | Language |
-| <img alt="Python icon" src="https://cdn.simpleicons.org/python/3776AB" width="18" height="18"> Python | 6.6% | Language |
-| <img alt="Rust icon" src="https://cdn.simpleicons.org/rust/000000" width="18" height="18"> Rust | 4.3% | Language |
+| <img alt="TypeScript icon" src="https://cdn.simpleicons.org/typescript/3178C6" width="18" height="18"> TypeScript | 40.7% | Language |
+| <img alt="Go icon" src="https://cdn.simpleicons.org/go/00ADD8" width="18" height="18"> Go | 15.5% | Language |
+| <img alt="PHP icon" src="https://cdn.simpleicons.org/php/777BB4" width="18" height="18"> PHP | 11.9% | Language |
+| <img alt="JavaScript icon" src="https://cdn.simpleicons.org/javascript/F7DF1E" width="18" height="18"> JavaScript | 8.5% | Language |
+| <img alt="Python icon" src="https://cdn.simpleicons.org/python/3776AB" width="18" height="18"> Python | 6.4% | Language |
+| <img alt="Rust icon" src="https://cdn.simpleicons.org/rust/000000" width="18" height="18"> Rust | 5.2% | Language |
 | <img alt="HTML icon" src="https://cdn.simpleicons.org/html5/E34F26" width="18" height="18"> HTML | 2.8% | Language |
-| <img alt="Dart icon" src="https://cdn.simpleicons.org/dart/0175C2" width="18" height="18"> Dart | 2.3% | Language |
+| <img alt="Dart icon" src="https://cdn.simpleicons.org/dart/0175C2" width="18" height="18"> Dart | 2.2% | Language |
 
 ### Private framework & tool signals
 
